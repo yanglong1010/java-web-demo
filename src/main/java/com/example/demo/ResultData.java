@@ -1,23 +1,23 @@
 package com.example.demo;
 
 public class ResultData<T> {
-    private T t;
+    private T value;
     private long durationMillis;
 
     public ResultData() {
     }
 
     public ResultData(T t, long durationMillis) {
-        this.t = t;
+        this.value = t;
         this.durationMillis = durationMillis;
     }
 
-    public T getT() {
-        return t;
+    public T getValue() {
+        return value;
     }
 
-    public void setT(T t) {
-        this.t = t;
+    public void setValue(T value) {
+        this.value = value;
     }
 
     public long getDurationMillis() {
