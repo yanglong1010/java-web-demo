@@ -19,13 +19,9 @@ public class DemoController4 {
     }
 
     private List<Book2> queryAllBooks() {
-        Random random = new Random();
         List<Book2> list = new ArrayList<>();
         for (int i = 0; i < 1024 * 20; i++) {
-            list.add(new Book2("Book" + i,
-                    200 + random.nextInt(100),
-                    new byte[1024 * 256]
-            ));
+            list.add(new Book2("Book" + i, new byte[1024 * 256]));
         }
         return list;
     }
