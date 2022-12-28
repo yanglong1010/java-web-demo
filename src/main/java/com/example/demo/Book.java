@@ -1,6 +1,8 @@
 package com.example.demo;
 
-public class Book {
+import java.io.Serializable;
+
+public class Book implements Serializable {
     private String name;
     private int pageCount;
 

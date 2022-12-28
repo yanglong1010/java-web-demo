@@ -1,6 +1,8 @@
 package com.example.demo;
 
-public class Book2 {
+import java.io.Serializable;
+
+public class Book2 implements Serializable {
     private String name;
     private byte[] content;
 
