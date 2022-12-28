@@ -32,7 +32,7 @@ public class DemoController4 {
         }
 
         int fromIndex = (page - 1) * pageSize;
-        int toIndex = (page - 1) * pageSize;
+        int toIndex = fromIndex + pageSize;
         return allBooks.subList(fromIndex, toIndex);
     }
 }
