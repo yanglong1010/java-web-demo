@@ -15,15 +15,9 @@ public class DemoController4 {
         long start = System.currentTimeMillis();
         List<Book2> allBooks = queryAllBooks();
         List<Book2> list = getBooksByPage(allBooks, page, pageSize);
-        return new ResultData<>(list, System.currentTimeMillis() - start);
-    }
-
-    private List<Book2> queryAllBooks() {
-        List<Book2> list = new ArrayList<>();
-        for (int i = 0; i < 1024 * 20; i++) {
-            list.add(new Book2("Book" + i, new byte[1024 * 256]));
-        }
-        return list;
+        List<Book2> resultList = new ArrayList<>();
+        list.forEach(item -> resultList.add(new Book2(item.getName())));
+        return new ResultData<>(resultList, System.currentTimeMillis() - start);
     }
 
     private List<Book2> getBooksByPage(List<Book2> allBooks, int page, int pageSize) {
@@ -34,5 +28,13 @@ public class DemoController4 {
         int fromIndex = (page - 1) * pageSize;
         int toIndex = fromIndex + pageSize;
         return allBooks.subList(fromIndex, toIndex);
+    }
+
+    private List<Book2> queryAllBooks() {
+        List<Book2> list = new ArrayList<>();
+        for (int i = 0; i < 1024 * 20; i++) {
+            list.add(new Book2("Book" + i, new byte[1024 * 256]));
+        }
+        return list;
     }
 }

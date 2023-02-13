@@ -11,6 +11,10 @@ public class Book2 implements Serializable {
         this.content = content;
     }
 
+    public Book2(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
