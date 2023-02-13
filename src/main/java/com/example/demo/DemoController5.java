@@ -14,7 +14,9 @@ public class DemoController5 {
     public ResultData<List<Book2>> index(@RequestParam int page, int pageSize) {
         long start = System.currentTimeMillis();
         List<Book2> list = getBooksByPage(page, pageSize);
-        return new ResultData<>(list, System.currentTimeMillis() - start);
+        List<Book2> resultList = new ArrayList<>();
+        list.forEach(item -> resultList.add(new Book2(item.getName())));
+        return new ResultData<>(resultList, System.currentTimeMillis() - start);
     }
 
     private List<Book2> getBooksByPage(int page, int pageSize) {
