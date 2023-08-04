@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.dao.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,24 +12,26 @@ import java.util.Random;
 
 @RestController
 public class DemoController {
-    @GetMapping("/countAllBookPages")
+    private BookRepository bookRepo;
+    private DataUtil dataUtil;
+
+    @GetMapping("/countBookPages")
     public ResultData<Long> index() {
         long start = System.currentTimeMillis();
-        List<Book> list = queryAllBooks();
-        long pageCount = countAllBookPages(list);
+        dataUtil.prepareBooksIfNeeded();
+
+        List<Book> list = queryBooks();
+        long pageCount = countBookPages(list);
+
         return new ResultData<>(pageCount, System.currentTimeMillis() - start);
     }
 
-    private List<Book> queryAllBooks() {
-        Random random = new Random();
-        List<Book> list = new LinkedList<>();
-        for (int i = 0; i < 1024 * 50; i++) {
-            list.add(new Book("Book" + i, 200 + random.nextInt(100)));
-        }
-        return list;
+    private List<Book> queryBooks() {
+        List<Book> books = bookRepo.findAllBooks();
+        return new LinkedList<>(books);
     }
 
-    private long countAllBookPages(List<Book> list) {
+    private long countBookPages(List<Book> list) {
         if (list == null || list.isEmpty()) {
             return 0;
         }
@@ -37,5 +41,15 @@ public class DemoController {
             count += list.get(i).getPageCount();
         }
         return count;
+    }
+
+    @Autowired
+    public void setDataUtil(DataUtil dataUtil) {
+        this.dataUtil = dataUtil;
+    }
+
+    @Autowired
+    public void setBookRepo(BookRepository bookRepo) {
+        this.bookRepo = bookRepo;
     }
 }

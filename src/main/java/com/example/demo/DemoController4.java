@@ -1,40 +1,38 @@
 package com.example.demo;
 
+import com.example.demo.dao.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 @RestController
 public class DemoController4 {
-    @GetMapping("/queryBooksByPage")
-    public ResultData<List<Book2>> index(@RequestParam int page, int pageSize) {
+    private BookRepository bookRepo;
+    private DataUtil dataUtil;
+
+    @GetMapping("/countBookPages3")
+    public ResultData<Long> index() {
         long start = System.currentTimeMillis();
-        List<Book2> allBooks = queryAllBooks();
-        List<Book2> list = getBooksByPage(allBooks, page, pageSize);
-        List<Book2> resultList = new ArrayList<>();
-        list.forEach(item -> resultList.add(new Book2(item.getName())));
-        return new ResultData<>(resultList, System.currentTimeMillis() - start);
+
+        dataUtil.prepareBooksIfNeeded();
+
+        long pageCount = bookRepo.countBookPages();
+
+        return new ResultData<>(pageCount, System.currentTimeMillis() - start);
     }
 
-    private List<Book2> getBooksByPage(List<Book2> allBooks, int page, int pageSize) {
-        if (allBooks == null || allBooks.isEmpty()) {
-            return null;
-        }
-
-        int fromIndex = (page - 1) * pageSize;
-        int toIndex = fromIndex + pageSize;
-        return allBooks.subList(fromIndex, toIndex);
+    @Autowired
+    public void setBookRepo(BookRepository bookRepo) {
+        this.bookRepo = bookRepo;
     }
 
-    private List<Book2> queryAllBooks() {
-        List<Book2> list = new ArrayList<>();
-        for (int i = 0; i < 1024 * 20; i++) {
-            list.add(new Book2("Book" + i, new byte[1024 * 256]));
-        }
-        return list;
+    @Autowired
+    public void setDataUtil(DataUtil dataUtil) {
+        this.dataUtil = dataUtil;
     }
 }

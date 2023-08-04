@@ -8,20 +8,19 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @RestController
-public class DemoController5 {
+public class DemoController6 {
     private BookRepository bookRepo;
     private DataUtil dataUtil;
     private static List<Book> list = null;
     private static final ExecutorService executorService = Executors.newFixedThreadPool(100);
 
-    @GetMapping("/groupBook")
+    @GetMapping("/groupBook2")
     public ResultData<Map<Integer, Integer>> index() throws InterruptedException {
         long start = System.currentTimeMillis();
         dataUtil.prepareBooksIfNeeded(1000 * 1000);
@@ -36,7 +35,7 @@ public class DemoController5 {
     }
 
     private Map<Integer, Integer> groupByPage(List<Book> list) throws InterruptedException {
-        Map<Integer, Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new ConcurrentHashMap<>();
         int part = 1000;
         int n = list.size() / part;
         int m = list.size() % part == 0 ? n : n + 1;
@@ -55,10 +54,8 @@ public class DemoController5 {
 
     private static void groupBook(Map<Integer, Integer> map, List<Book> subList) {
         for (Book book : subList) {
-            synchronized (map) {
-                int key = book.getPageCount() / 10 * 10;
-                map.compute(key, (k, v) -> (v == null) ? 1 : v + 1);
-            }
+            int key = book.getPageCount() / 10 * 10;
+            map.compute(key, (k, v) -> (v == null) ? 1 : v + 1);
         }
     }
 
